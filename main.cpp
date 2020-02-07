@@ -22,7 +22,7 @@ unsigned long createRGB(int r, int g, int b) { return ((r & 0xff) << 16) + ((g &
 
 int createRGBA(int r, int g, int b, int a) { return ((r & 0xff) << 24) + ((g & 0xff) << 16) + ((b & 0xff) << 8) + (a & 0xff); }
 
-Vect3f trace(const Ray & ray_shot, const std::vector<Surface *> surfaces, const int & depth)
+Vect3f trace(const Ray & ray_shot, const std::vector<Surface *> &surfaces, const int & depth)
 {
     // if (raydir.length() != 1) std::cerr << "Error " << raydir << std::endl;
     float tnear       = INFINITY;
@@ -125,12 +125,12 @@ int main(int argc, char ** argv)
 
     bool leftMouseButtonDown = false;
     bool quit                = false;
+    bool rendered = false;
 
     constexpr unsigned int WIDTH  = 1080; // 1600;
     constexpr unsigned int HEIGHT = 840;  // 1200;
 
     Uint32 * pixels = new Uint32[WIDTH * HEIGHT];
-    SDL_Event event;
 
     double invWidth     = 1 / double(WIDTH);
     double invHeight    = 1 / double(HEIGHT);
@@ -140,11 +140,11 @@ int main(int argc, char ** argv)
 
     Vect3f camera_origin(0, 0, 0);
     Vect3f camera_up(0, 1, 0);
-    // Vect3f camera_right =
 
-    bool rendered = false;
+    SDL_Event event;
+    
 
-    std::vector<Surface *> surfaces;
+    std::vector<Surface *> surfaces ;
 
     surfaces.push_back(new Plane(Vect3f(0, 1, 0), Vect3f(0, -10, 0), Vect3f(0.0, 0.80, 0.20), 0, 0, Vect3f(0)));
 
@@ -209,31 +209,27 @@ int main(int argc, char ** argv)
                 }
         }
 
-
-        /* GET COLORS */
         if (!rendered)
         {
-            int spot = 0;
             for (unsigned y = 0; y < HEIGHT; ++y)
             {
                 for (unsigned x = 0; x < WIDTH; ++x)
                 {
 
-                    double xx = (2 * ((canvas.at(spot).at(0) + 0.5) * invWidth) - 1) * angle * aspect_ratio;
-                    double yy = (1 - 2 * ((canvas.at(spot).at(1) + 0.5) * invHeight)) * angle;
+                    double xx = (2 * ((canvas.at(WIDTH * y + x).at(0) + 0.5) * invWidth) - 1) * angle * aspect_ratio;
+                    double yy = (1 - 2 * ((canvas.at(WIDTH * y + x).at(1) + 0.5) * invHeight)) * angle;
 
                     Ray shoot_ray(camera_origin, Vect3f(xx, yy, -1).normalize());
                     Vect3f color = trace(shoot_ray, surfaces, 0);
                     Ray r(camera_origin, Vect3f(xx, yy, -1).normalize());
-                    double t = 0;
-                    double c = 0;
-                    // std::cout << surfaces[0]->intersect(r, t,  c);
+                    
+            
+
                     color.x = std::min(double(1), color.x) * 255;
                     color.y = std::min(double(1), color.y) * 255;
                     color.z = std::min(double(1), color.z) * 255;
 
                     pixels[WIDTH * y + x] = createRGB(color.x, color.y, color.z);
-                    spot += 1;
                 }
             }
 
