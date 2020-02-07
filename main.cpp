@@ -165,7 +165,7 @@ int main(int argc, char ** argv)
     {
         for (int x = 0; x < WIDTH; ++x)
         {
-            std::vector<int> point = { x, y, 0 };
+            std::vector<int> point = { x, y, 0};
             canvas.push_back(point);
         }
     }
