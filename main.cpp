@@ -22,7 +22,7 @@ unsigned long createRGB(int r, int g, int b) { return ((r & 0xff) << 16) + ((g &
 
 int createRGBA(int r, int g, int b, int a) { return ((r & 0xff) << 24) + ((g & 0xff) << 16) + ((b & 0xff) << 8) + (a & 0xff); }
 
-Vect3f trace(const Ray & ray_shot, const std::vector<Surface *> &surfaces, const int & depth)
+Vect3f trace(const Ray & ray_shot, const std::vector<Surface *> & surfaces, const int & depth)
 {
     // if (raydir.length() != 1) std::cerr << "Error " << raydir << std::endl;
     float tnear       = INFINITY;
@@ -125,7 +125,7 @@ int main(int argc, char ** argv)
 
     bool leftMouseButtonDown = false;
     bool quit                = false;
-    bool rendered = false;
+    bool rendered            = false;
 
     constexpr unsigned int WIDTH  = 1080; // 1600;
     constexpr unsigned int HEIGHT = 840;  // 1200;
@@ -142,9 +142,9 @@ int main(int argc, char ** argv)
     Vect3f camera_up(0, 1, 0);
 
     SDL_Event event;
-    
 
-    std::vector<Surface *> surfaces ;
+
+    std::vector<Surface *> surfaces;
 
     surfaces.push_back(new Plane(Vect3f(0, 1, 0), Vect3f(0, -10, 0), Vect3f(0.0, 0.80, 0.20), 0, 0, Vect3f(0)));
 
@@ -165,7 +165,7 @@ int main(int argc, char ** argv)
     {
         for (int x = 0; x < WIDTH; ++x)
         {
-            std::vector<int> point = { x, y, 0};
+            std::vector<int> point = { x, y, 0 };
             canvas.push_back(point);
         }
     }
@@ -222,8 +222,7 @@ int main(int argc, char ** argv)
                     Ray shoot_ray(camera_origin, Vect3f(xx, yy, -1).normalize());
                     Vect3f color = trace(shoot_ray, surfaces, 0);
                     Ray r(camera_origin, Vect3f(xx, yy, -1).normalize());
-                    
-            
+
 
                     color.x = std::min(double(1), color.x) * 255;
                     color.y = std::min(double(1), color.y) * 255;
